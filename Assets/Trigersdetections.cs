@@ -12,13 +12,20 @@ public class Trigersdetections : MonoBehaviour
 
     public Text txtKeys;
 
-    private SpVoice voice;
+    private SpVoice voice = new SpVoice();
     public GameObject panel;
+
+    public AudioSource audioLlave;
+    public AudioSource audioPuerta;
+    public AudioSource audioPuertaLock;
 
     // Start is called before the first frame update
     void Start()
     {
-        voice = new SpVoice();
+        audioLlave = gameObject.GetComponent<AudioSource>();
+        mostrarDialogo(""+audioLlave, 5);
+        audioPuerta = gameObject.GetComponent<AudioSource>();
+        audioPuertaLock = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,6 +56,7 @@ public class Trigersdetections : MonoBehaviour
         Debug.Log(other.tag);
         if (other.tag == "Key") {
             Destroy(other.gameObject);
+            audioLlave.Play();
             keys++;
             txtKeys.text = keys.ToString();
             mostrarDialogo("Llave encontrada!", 2);
@@ -70,16 +78,31 @@ public class Trigersdetections : MonoBehaviour
                 Destroy(collision.gameObject);
                 keys--;
                 txtKeys.text = keys.ToString();
-                mostrarDialogo("Has escapado de tu habitacion. Continua con cuidado.", 4);
+                audioPuerta.Play();
+                mostrarDialogo("Has escapado de tu habitacion. Continúa con cuidado.", 4);
             }
             else {
-                Debug.Log("No tines una llave para pasar por aqui");
+                audioPuertaLock.Play();
+                Debug.Log("No tienes una llave para pasar por aqui");
                 mostrarDialogo("Necesitas una llave para pasar por esta puerta!", 3);
             }
         }
         if (collision.collider.tag == "PuertaFinal") {
-	    mostrarDialogo("Has logrado escapar de la casa. Felicidades!", 4);
-	}
+            if (keys > 0)
+            {
+                Destroy(collision.gameObject);
+                keys--;
+                txtKeys.text = keys.ToString();
+                mostrarDialogo("Has logrado escapar de la casa. Felicidades!", 4);
+                audioPuerta.Play();
+            }
+            else
+            {
+                audioPuertaLock.Play();
+                Debug.Log("No tienes una llave para pasar por aqui");
+                mostrarDialogo("Necesitas una llave para pasar por esta puerta!", 3);
+            }
+        }
     }
 	/*
     private void OnCollisionExit(Collision collision)

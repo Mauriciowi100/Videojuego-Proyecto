@@ -9,6 +9,7 @@ TagManager:
   - Key
   - Puerta
   - PuertaFinal
+  - Llave Final
   layers:
   - Default
   - TransparentFX
