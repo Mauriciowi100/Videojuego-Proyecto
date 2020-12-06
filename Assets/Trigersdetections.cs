@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using SpeechLib;
 
 public class Trigersdetections : MonoBehaviour
 {
 
     private int keys = 0;
-
+    public bool hablando = false;
     public Text txtKeys;
 
     private SpVoice voice = new SpVoice();
@@ -30,17 +29,19 @@ public class Trigersdetections : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
+    {}
 
     void mostrarDialogo(string txtMostrado, int duracion) {
 	IEnumerator waiter() {
         panel.gameObject.SetActive(true);
         panel.GetComponent<Text>().text = txtMostrado;
-        voice.Speak(txtMostrado, SpeechVoiceSpeakFlags.SVSFlagsAsync);
+	if(hablando == false){
+	 hablando = true;
+         voice.Speak(txtMostrado, SpeechVoiceSpeakFlags.SVSFlagsAsync);
+	}
 	yield return new WaitForSeconds(duracion); // espera
 	if (panel.GetComponent<Text>().text == txtMostrado) {
+	    hablando = false;
 	    esconderDialogo();
 	}
 	}
