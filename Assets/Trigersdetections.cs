@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using SpeechLib;
 
 public class Trigersdetections : MonoBehaviour
 {
 
     private int keys = 0;
-
+    public bool hablando = false;
     public Text txtKeys;
 
-    private SpVoice voice;
+    private SpVoice voice = new SpVoice();
     public GameObject panel;
 
     private AudioSource audioSource;
@@ -20,6 +19,9 @@ public class Trigersdetections : MonoBehaviour
     public AudioClip clipKey;
 
     public AudioClip clipDorClose;
+    public AudioSource audioLlave;
+    public AudioSource audioPuerta;
+    public AudioSource audioPuertaLock;
 
     // Start is called before the first frame update
     void Start()
@@ -27,21 +29,27 @@ public class Trigersdetections : MonoBehaviour
         voice = new SpVoice();
 
         audioSource = GetComponent<AudioSource>();
+        audioLlave = gameObject.GetComponent<AudioSource>();
+        mostrarDialogo(""+audioLlave, 5);
+        audioPuerta = gameObject.GetComponent<AudioSource>();
+        audioPuertaLock = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
+    {}
 
     void mostrarDialogo(string txtMostrado, int duracion) {
 	IEnumerator waiter() {
         panel.gameObject.SetActive(true);
         panel.GetComponent<Text>().text = txtMostrado;
-        voice.Speak(txtMostrado, SpeechVoiceSpeakFlags.SVSFlagsAsync);
+	if(hablando == false){
+	 hablando = true;
+         voice.Speak(txtMostrado, SpeechVoiceSpeakFlags.SVSFlagsAsync);
+	}
 	yield return new WaitForSeconds(duracion); // espera
 	if (panel.GetComponent<Text>().text == txtMostrado) {
+	    hablando = false;
 	    esconderDialogo();
 	}
 	}
@@ -58,6 +66,7 @@ public class Trigersdetections : MonoBehaviour
         if (other.tag == "Key") {
             audioSource.PlayOneShot(clipKey);
             Destroy(other.gameObject);
+            audioLlave.Play();
             keys++;
             txtKeys.text = keys.ToString();
             mostrarDialogo("Llave encontrada!", 2);
@@ -79,17 +88,33 @@ public class Trigersdetections : MonoBehaviour
                 Destroy(collision.gameObject);
                 keys--;
                 txtKeys.text = keys.ToString();
-                mostrarDialogo("Has escapado de tu habitacion. Continua con cuidado.", 4);
+                audioPuerta.Play();
+                mostrarDialogo("Has escapado de tu habitacion. Continúa con cuidado.", 4);
             }
             else {
                 audioSource.PlayOneShot(clipDorClose);
                 Debug.Log("No tines una llave para pasar por aqui");
+                audioPuertaLock.Play();
+                Debug.Log("No tienes una llave para pasar por aqui");
                 mostrarDialogo("Necesitas una llave para pasar por esta puerta!", 3);
             }
         }
         if (collision.collider.tag == "PuertaFinal") {
-	    mostrarDialogo("Has logrado escapar de la casa. Felicidades!", 4);
-	}
+            if (keys > 0)
+            {
+                Destroy(collision.gameObject);
+                keys--;
+                txtKeys.text = keys.ToString();
+                mostrarDialogo("Has logrado escapar de la casa. Felicidades!", 4);
+                audioPuerta.Play();
+            }
+            else
+            {
+                audioPuertaLock.Play();
+                Debug.Log("No tienes una llave para pasar por aqui");
+                mostrarDialogo("Necesitas una llave para pasar por esta puerta!", 3);
+            }
+        }
     }
 	/*
     private void OnCollisionExit(Collision collision)
