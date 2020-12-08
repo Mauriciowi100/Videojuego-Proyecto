@@ -15,10 +15,18 @@ public class Trigersdetections : MonoBehaviour
     private SpVoice voice;
     public GameObject panel;
 
+    private AudioSource audioSource;
+
+    public AudioClip clipKey;
+
+    public AudioClip clipDorClose;
+
     // Start is called before the first frame update
     void Start()
     {
         voice = new SpVoice();
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -48,6 +56,7 @@ public class Trigersdetections : MonoBehaviour
     {
         Debug.Log(other.tag);
         if (other.tag == "Key") {
+            audioSource.PlayOneShot(clipKey);
             Destroy(other.gameObject);
             keys++;
             txtKeys.text = keys.ToString();
@@ -73,6 +82,7 @@ public class Trigersdetections : MonoBehaviour
                 mostrarDialogo("Has escapado de tu habitacion. Continua con cuidado.", 4);
             }
             else {
+                audioSource.PlayOneShot(clipDorClose);
                 Debug.Log("No tines una llave para pasar por aqui");
                 mostrarDialogo("Necesitas una llave para pasar por esta puerta!", 3);
             }
