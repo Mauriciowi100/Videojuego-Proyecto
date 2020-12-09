@@ -10,6 +10,7 @@ TagManager:
   - Puerta
   - PuertaFinal
   - Llave Final
+  - Enemy
   layers:
   - Default
   - TransparentFX

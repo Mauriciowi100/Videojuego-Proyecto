@@ -19,7 +19,11 @@ public class CargaLevel : MonoBehaviour
 
     public void CargarNivel (string NombreNivel)
     {
+        if (Time.timeScale == 0) {
+            Time.timeScale = 1;
+        }
         SceneManager.LoadScene(NombreNivel);
+        
     }
 
     public void salir()

@@ -13,6 +13,8 @@ public class Trigersdetections : MonoBehaviour
 
     private SpVoice voice = new SpVoice();
     public GameObject panel;
+    public GameObject panelGameOver;
+    public GameObject panelCreditos;
 
     private AudioSource audioSource;
 
@@ -22,6 +24,7 @@ public class Trigersdetections : MonoBehaviour
     public AudioSource audioLlave;
     public AudioSource audioPuerta;
     public AudioSource audioPuertaLock;
+    public AudioSource audioGameOver;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,7 @@ public class Trigersdetections : MonoBehaviour
         mostrarDialogo(""+audioLlave, 5);
         audioPuerta = gameObject.GetComponent<AudioSource>();
         audioPuertaLock = gameObject.GetComponent<AudioSource>();
+        audioGameOver = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -64,12 +68,19 @@ public class Trigersdetections : MonoBehaviour
     {
         Debug.Log(other.tag);
         if (other.tag == "Key") {
-            audioSource.PlayOneShot(clipKey);
+            //audioSource.PlayOneShot(clipKey);
             Destroy(other.gameObject);
             audioLlave.Play();
             keys++;
             txtKeys.text = keys.ToString();
             mostrarDialogo("Llave encontrada!", 2);
+        }
+        if (other.tag == "Enemy") {
+            Debug.Log("Te ha tocado el enemigo estas jodido");
+            panelGameOver.SetActive(true);
+            panel.SetActive(false);
+            audioGameOver.Play();
+            Time.timeScale = 0;
         }
     }
 /*
@@ -92,7 +103,7 @@ public class Trigersdetections : MonoBehaviour
                 mostrarDialogo("Has escapado de tu habitacion. Continúa con cuidado.", 4);
             }
             else {
-                audioSource.PlayOneShot(clipDorClose);
+                //audioSource.PlayOneShot(clipDorClose);
                 Debug.Log("No tines una llave para pasar por aqui");
                 audioPuertaLock.Play();
                 Debug.Log("No tienes una llave para pasar por aqui");
@@ -107,6 +118,10 @@ public class Trigersdetections : MonoBehaviour
                 txtKeys.text = keys.ToString();
                 mostrarDialogo("Has logrado escapar de la casa. Felicidades!", 4);
                 audioPuerta.Play();
+                panelCreditos.SetActive(true);
+                panel.SetActive(false);
+                esperar(2);
+                Time.timeScale = 0;
             }
             else
             {
@@ -116,7 +131,15 @@ public class Trigersdetections : MonoBehaviour
             }
         }
     }
-	/*
+
+    IEnumerator esperar(int seconds)
+    {
+
+        yield return new WaitForSeconds(seconds);
+
+    }
+
+    /*
     private void OnCollisionExit(Collision collision)
     {
         if (collision.collider.tag == "Puerta") {
