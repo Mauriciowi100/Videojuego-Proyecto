@@ -926,8 +926,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000038147, y: -92.264}
-  m_SizeDelta: {x: 1208.621, y: 337.6493}
+  m_AnchoredPosition: {x: 13.7, y: -87.6}
+  m_SizeDelta: {x: 1236.1188, y: 346.89648}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2051799223
 MonoBehaviour:
@@ -968,7 +968,7 @@ MonoBehaviour:
     Guillermo
     Ochoa Parra
 
-    Leobardo Vizcarra'
+    Leobardo Vizcarra Valdez'
 --- !u!222 &2051799224
 CanvasRenderer:
   m_ObjectHideFlags: 0
